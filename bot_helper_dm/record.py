@@ -31,7 +31,7 @@ class Record:
 
         days_until_birthday = current_year_birthday - today
 
-        return f'{days_until_birthday.days} days until {self.name}\'s birthday' # change for new bd func
+        return days_until_birthday.days
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))

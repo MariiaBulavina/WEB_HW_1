@@ -5,7 +5,8 @@ from .phone import PhoneError
 from .record import Record
 from .addressbook import AddressBook
 from .birthday import BirthdayError
-from .notes import NoteBook, Note
+from .notes import Note
+from .notebook import NoteBook
 
 book = AddressBook()
 notes = NoteBook()
@@ -127,7 +128,8 @@ def days_to_birthday(*args):
     record = book.get(name)
 
     try:
-        return record.days_to_birthday() 
+        days_until_birthday = record.days_to_birthday() 
+        return f'{days_until_birthday} days until {name}\'s birthday'
     except AttributeError:
         return f'There is no birthday entry in the contact with the name {name}'
 
@@ -299,6 +301,17 @@ def show_all_contacts(*args):
     return table
 
 
+@input_error
+def upcoming_birthdays(*args):
+    
+    result = ''
+    period = int(args[0])
+    birthdays = book.upcoming_birthdays(period)
+    for line in birthdays:
+        result += line + '\n'
+    return result.strip()    
+
+    
 def close(*args):
     return 'Good bye!'
 
@@ -366,6 +379,8 @@ COMMANDS = {
 
     add_birthday: ['add_birthday'],
     days_to_birthday: ['days_to_birthday'],
+    upcoming_birthdays: ['upcoming_birthdays'],
+
 
     add_email: ['add_email'],
     change_email: ['change_email'],
