@@ -3,10 +3,11 @@ import tabulate
 from collections import UserDict
 import pickle
 
+
 class NoteBook(UserDict):
     
     def add_note(self, note):
-        self.data[self.title] = note
+        self.data[note.title] = note
 
 
     def delete_note(self, title):

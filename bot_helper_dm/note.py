@@ -9,7 +9,7 @@ class Note:
 
 
     def add_text(self, text):
-        self.text += text
+        self.text += ' ' + text
 
     def add_tegs(self, tegs):
         tegs = tegs.split(' ')
@@ -19,10 +19,11 @@ class Note:
     def change_note(self, text):
         self.text = text
                 
-        
+    def remove_teg(self, teg):
+        self.tegs.remove(teg)
 
     def __str__(self) -> str:
-        return f'{self.title}: {self.text} {self.tegs}'    
+        return f'{self.title}: {self.text} tegs: {self.tegs}'    
     
     def __repr__(self) -> str:
-        return f'{self.title}: {self.text} {self.tegs}'  
+        return f'{self.title}: {self.text} tegs: {self.tegs}'  

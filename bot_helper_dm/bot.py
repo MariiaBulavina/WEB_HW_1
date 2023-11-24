@@ -5,7 +5,7 @@ from .phone import PhoneError
 from .record import Record
 from .addressbook import AddressBook
 from .birthday import BirthdayError
-from .notes import Note
+from .note import Note
 from .notebook import NoteBook
 
 book = AddressBook()
@@ -152,8 +152,9 @@ def find_note(*args):
     data = args[0]
     search_matches = []
 
-    for note in notes.data.items():
-        result = re.findall(data, str(note))
+    for _, note in notes.data.items():
+        changed_note = str(note).replace('tegs:', '')
+        result = re.findall(data, changed_note)
 
         if result:
             search_matches.append(note)
@@ -271,8 +272,22 @@ def add_note(*args):
             tegs = input('Enter tags in the format: #teg #teg1: ')
             notes[title].add_tegs(tegs)
 
-        return f'Note {title}: {text} was created'
-    
+        return f'Note \'{title}: {text}\' was created'
+
+@input_error
+def add_tegs(*args):
+
+    title = args[0]
+
+    if title in notes:
+        tegs = ''
+        for t in args[1:]:
+            tegs += ' ' + t
+        notes[title].add_tegs(tegs.strip())
+        return f'Tegs {tegs} were added to the note with the title {title}'
+    else:
+        return 'You don\'t have any notes with this title'
+
 
 @input_error
 def change_note(*args):
@@ -283,12 +298,14 @@ def change_note(*args):
     return f'Note with title {title} has been changed'
 
 @input_error
-def change_teg(*args):
-    ...
+def remove_teg(*args):
+    
+    title = args[0]
+    teg = args[1]
+    notes[title]
+    notes[title].remove_teg(teg)
+    return f'The {teg} tag for the note with the title {title} has been removed'
 
-@input_error
-def change_title(*args):
-    ...    
 
 @input_error
 def show_all_notes(*args):
@@ -391,12 +408,12 @@ COMMANDS = {
     delete_address: ['delete_address'],
 
     add_note: ['add_note'],
+    add_tegs: ['add_tegs'],
     show_all_notes: ['show_all_notes'],
     find_note: ['find_note'],
     delete_note: ['delete_note'],
-    change_title: ['change_title'],
     change_note: ['change_note'],
-    change_teg: ['change_teg']
+    remove_teg: ['remove_teg']
 
 
 }
