@@ -12,6 +12,7 @@ class Table(ABC):
 
 
 
+
 class AddressbookTable(Table):
 
     def create_table(self):
@@ -19,7 +20,7 @@ class AddressbookTable(Table):
         ['name', 'phones', 'birthday', 'emails', 'address']
     ]
         for contact in self.data.values():
-            line = [contact.name, contact.phones, contact.birthday, contact.emails, contact.address]
+            line = [contact.name,  '; '.join([str(p.value) for p in contact.phones]), contact.birthday, '; '.join([str(em.value) for em in contact.emails]), contact.address]
             data.append(line)
 
         result = tabulate(data,headers='firstrow',tablefmt='fancy_grid')
@@ -35,7 +36,7 @@ class NotebookTable(Table):
     ]
 
         for note in self.data.values():
-            line = [note.title, note.text, note.tegs]
+            line = [note.title, note.text, "; ".join([str(teg) for teg in note.tegs])]
             data.append(line)
 
         result = tabulate(data,headers='firstrow',tablefmt='fancy_grid')
@@ -50,7 +51,7 @@ class ContactTable(Table):
     ]
         
         for contact in contacts:
-            line = [contact.name, contact.phones, contact.birthday, contact.emails, contact.address]
+            line = [contact.name, '; '.join([str(p.value) for p in contact.phones]), contact.birthday, '; '.join([str(em.value) for em in contact.emails]), contact.address]
             data.append(line)
 
         result = tabulate(data,headers='firstrow',tablefmt='fancy_grid')
@@ -65,7 +66,7 @@ class NoteTable(Table):
     ]
         
         for note in notes:
-            line = [note.title, note.text, note.tegs]
+            line = [note.title, note.text, "; ".join([str(teg) for teg in note.tegs])]
             data.append(line)
 
         result = tabulate(data,headers='firstrow',tablefmt='fancy_grid')

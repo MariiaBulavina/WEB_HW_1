@@ -23,7 +23,7 @@ class Note:
         self.tegs.remove(teg)
 
     def __str__(self) -> str:
-        return f'{self.title}: {self.text} tegs: {self.tegs}'    
+        return f'{self.title}: {self.text} tegs: {"; ".join([str(teg) for teg in self.tegs])}'
     
     def __repr__(self) -> str:
-        return f'{self.title}: {self.text} tegs: {self.tegs}'  
+        return f'{self.title}: {self.text} tegs: {"; ".join([str(teg) for teg in self.tegs])}'
