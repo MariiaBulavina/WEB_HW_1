@@ -1,10 +1,11 @@
 import tabulate
 
 from collections import UserDict
-import pickle
+
+from save_load import SaverLoader
 
 
-class NoteBook(UserDict):
+class NoteBook(UserDict, SaverLoader):
     
     def add_note(self, note):
         self.data[note.title] = note
@@ -33,15 +34,4 @@ class NoteBook(UserDict):
         result = tabulate.tabulate(data)
         return result
 
-
-    def save(self, file_name):
-        with open(file_name, 'wb') as file:
-            pickle.dump(self, file)
-
-    def load(self, file_name):
-            try:
-                with open(file_name, 'rb') as file:
-                    file.seek(0)
-                    self.data = pickle.load(file)
-            except FileNotFoundError:
-                pass    
+ 

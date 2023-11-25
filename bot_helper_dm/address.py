@@ -10,7 +10,6 @@ class Address(Field):
 
     @property
     def value(self) -> list:
-        
         return self.__value
 
     @value.setter

@@ -1,6 +1,8 @@
-
 import re
 
+from prompt_toolkit import prompt
+
+from prmt import get_completer
 from .phone import PhoneError
 from .record import Record
 from .addressbook import AddressBook
@@ -13,7 +15,6 @@ notes = NoteBook()
 
 def input_error(func):
     def inner(*args):
-
         try:
             return func(*args)
         except IndexError:
@@ -26,7 +27,6 @@ def input_error(func):
             return 'You can\'t add a date in this format'
         except PhoneError:
             return 'Phone number must be 10 digits long'
-
     return inner
 
 
@@ -382,52 +382,52 @@ def help(*args):
 COMMANDS = {
     help: ['help'],
     hello: ['hello'],
-    close: ['good_bye', 'close', 'exit', '.'],
+    close: ['good bye', 'close', 'exit', '.'],
 
-    add_contact: ['add_contact'],
-    show_all_contacts: ['show_all_contacts'],
-    delete_contact: ['delete_contact'],
-    find_contact: ['find_contact'],
+    add_contact: ['add contact'],
+    show_all_contacts: ['show all contacts'],
+    delete_contact: ['delete contact'],
+    find_contact: ['find contact'],
 
-    add_phone: ['add_phone'],
-    change_phone: ['change_phone'],
+    add_phone: ['add phone'],
+    change_phone: ['change phone'],
     phone: ['phone'],
-    remove_phone: ['remove_phone'],
+    remove_phone: ['remove phone'],
 
-    add_birthday: ['add_birthday'],
-    days_to_birthday: ['days_to_birthday'],
-    upcoming_birthdays: ['upcoming_birthdays'],
+    add_birthday: ['add birthday'],
+    days_to_birthday: ['days to birthday'],
+    upcoming_birthdays: ['upcoming birthdays'],
 
+    add_email: ['add email'],
+    change_email: ['change email'],
+    remove_email: ['remove email'],
 
-    add_email: ['add_email'],
-    change_email: ['change_email'],
-    remove_email: ['remove_email'],
+    add_address: ['add address'],
+    change_address_by_key: ['change address'],
+    delete_address: ['delete address'],
 
-    add_address: ['add_address'],
-    change_address_by_key: ['change_address_by_key'],
-    delete_address: ['delete_address'],
-
-    add_note: ['add_note'],
-    add_tegs: ['add_tegs'],
-    show_all_notes: ['show_all_notes'],
-    find_note: ['find_note'],
-    delete_note: ['delete_note'],
-    change_note: ['change_note'],
-    remove_teg: ['remove_teg']
+    add_note: ['add note'],
+    add_tegs: ['add tegs'],
+    show_all_notes: ['show all notes'],
+    find_note: ['find note'],
+    delete_note: ['delete note'],
+    change_note: ['change note'],
+    remove_teg: ['remove teg']
 
 
 }
 
 
 @input_error
-def get_handler(command):
+def get_handler(user_input: str):
 
     for func, k_words in COMMANDS.items():
         for word in k_words:
-            if command.startswith(word):
-                return func
+            if user_input.lower().startswith(word):
 
-    return no_command
+                return func, user_input[len(word):].strip().split()
+    return no_command, []
+
 
 
 def main():
@@ -436,23 +436,19 @@ def main():
     notes.load('notes.bin')
   
     while True:
-        user_input = input('>>> ')
 
-        if not user_input:
-            continue
+        user_input = prompt(message=">>> ",
+                           completer=get_completer(),)
+        
+        function, data = get_handler(user_input)
 
-        input_list = user_input.split()
-
-        command = input_list[0].lower()
-        data = input_list[1:]
-
-        function = get_handler(command)
         print(function(*data))
 
         if function.__name__ == 'close':
             book.save('contacts.bin')
             notes.save('notes.bin')
             break
+
 
 
 if __name__ == '__main__':
