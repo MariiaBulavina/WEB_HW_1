@@ -2,13 +2,14 @@ import re
 
 from prompt_toolkit import prompt
 
-from prmt import get_completer
+from .prmt import get_completer
 from .phone import PhoneError
 from .record import Record
 from .addressbook import AddressBook
 from .birthday import BirthdayError
 from .note import Note
 from .notebook import NoteBook
+from .user_intaraction import ContactTable, NoteTable
 
 book = AddressBook()
 notes = NoteBook()
@@ -135,16 +136,17 @@ def days_to_birthday(*args):
 
 @input_error
 def find_contact(*args):
+
     data = args[0]
     search_matches = []
 
-    for contact in book.data.items():
+    for _, contact in book.data.items():
         changed_contact = str(contact).replace('Contact name:', '').replace('phones:', '').replace('birthday:', '').replace('address:', '').replace('emails:', '').replace('None', '')
         result = re.findall(data, str(changed_contact))
-
         if result:
             search_matches.append(contact)
-    return search_matches
+    contact_table = ContactTable()
+    return contact_table.create_table(search_matches)
 
 @input_error
 def find_note(*args):
@@ -158,7 +160,8 @@ def find_note(*args):
 
         if result:
             search_matches.append(note)
-    return search_matches
+    note_table = NoteTable()
+    return note_table.create_table(search_matches)
 
 
 @input_error
