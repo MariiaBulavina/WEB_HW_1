@@ -14,7 +14,7 @@ def get_completer():
             'email': None,
             'address': None,
             'note': None,
-            'tags': None},
+            'tegs': None},
 
         'show': {
             'all': {

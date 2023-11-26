@@ -9,7 +9,7 @@ from .addressbook import AddressBook
 from .birthday import BirthdayError
 from .note import Note
 from .notebook import NoteBook
-from .user_intaraction import ContactTable, NoteTable
+from .user_intaraction import ContactTable, NoteTable, HelpTable
 
 book = AddressBook()
 notes = NoteBook()
@@ -94,8 +94,9 @@ def phone(*args):
 @input_error
 def delete_contact(*args):
     name = args[0]
-    message = book.delete(name)
-    return message
+    book.delete(name)
+    return f'Сontact with the name {name} has been deleted'
+
 
 
 @input_error
@@ -250,6 +251,9 @@ def delete_address(*args):
 
     if name in book:
         book[name].delete_address()
+        return f'{name}\'s address has been deleted'
+
+
 
 
 @input_error
@@ -296,19 +300,25 @@ def add_tegs(*args):
 def change_note(*args):
     
     title = args[0]
-    new_text = args[1]
-    notes[title].change_note(new_text)
-    return f'Note with title {title} has been changed'
+    if title in notes:
+        new_text = args[1]
+        notes[title].change_note(new_text)
+        return f'Note with title {title} has been changed'
+    else:
+        return 'You don\'t have any notes with this title'
+    
 
 @input_error
 def remove_teg(*args):
     
     title = args[0]
-    teg = args[1]
-    notes[title]
-    notes[title].remove_teg(teg)
-    return f'The {teg} tag for the note with the title {title} has been removed'
-
+    if title in notes:
+        teg = args[1]
+        notes[title]
+        notes[title].remove_teg(teg)
+        return f'The {teg} tag for the note with the title {title} has been removed'
+    else:
+        return 'You don\'t have any notes with this title'
 
 @input_error
 def show_all_notes(*args):
@@ -341,46 +351,10 @@ def no_command(*args):
 
 
 def help(*args):
-    return '''COMMANDS
+    helptable = HelpTable()
+    return helptable.create_table()
 
-    To add a contact: 
-    add_contact name or add_contact name phone 
-    (The phone number must consist of numbers only and be 10 characters long)
-
-    To add a phone number: 
-    add_phone name phone 
-    (The phone number must consist of numbers only and be 10 characters long)
-    
-    To change a phone number:
-    change name old_phone new_phone
-
-    To view a phone number:
-    phone name
-
-    To view entries in a book:
-    show_all/show number_of_records_for_one_page
-
-    To end the bot's work:
-    good_bye/close/exit/.
-
-    To delete a contact:
-    delete_contact/delete name
-
-    To remove a phone number:
-    remove_phone/remove name phone
-
-    To add a birthday entry:
-    add_birthday name birthday_date
-    (Date must be in the format dd-mm-yyyy)
-
-    To get the number of days until next birthday:
-    days_to_birthday name
-
-    To find a contact based on matches with several letters or numbers:
-    find letter/number
-
-    '''
-
+     
 
 COMMANDS = {
     help: ['help'],
@@ -441,7 +415,8 @@ def main():
     while True:
 
         user_input = prompt(message=">>> ",
-                           completer=get_completer(),)
+                           completer=get_completer(),
+                           bottom_toolbar='enter \'help\' to get information about bot commands')
         
         function, data = get_handler(user_input)
 

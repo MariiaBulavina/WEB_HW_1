@@ -83,7 +83,7 @@ class Record:
 
     def delete_address(self):
         self.address = None
-        return f'{self.name.value}\'s address has been deleted'
+        
 
 
     def add_email(self, email):
